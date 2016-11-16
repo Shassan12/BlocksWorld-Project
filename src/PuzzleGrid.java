@@ -4,11 +4,32 @@ public class PuzzleGrid {
 	private int gridSize;
 	private char[][] tileList;
 	private String gridStatus;
+	private Point agentPos;
 	
 	public PuzzleGrid(int gridSize){
 		this.gridSize = gridSize;
 		this.tileList = new char[gridSize][gridSize];
 		initiateGrid();
+	}
+	
+	public Point getAgentPos(){
+		return agentPos;
+	}
+	
+	public char[][] getTileList(){
+		return tileList;
+	}
+	
+	public void setAgentPos(int xPos, int yPos){
+		agentPos = new Point(xPos, yPos);
+	}
+	
+	public void setTile(char c, int xCoord, int yCoord){
+		tileList[xCoord][yCoord] = c;
+	}
+	
+	public char getTile(int xPos, int yPos){
+		return tileList[xPos][yPos];
 	}
 	
 	private void initiateGrid(){
@@ -29,15 +50,29 @@ public class PuzzleGrid {
 		
 		for(int i=0; i<gridSize; i++){
 			for(int j=0; j<gridSize; j++){
-				tileList[i][j] = gridStatus.charAt(pos);
+				char currentChar = gridStatus.charAt(pos);
+				tileList[j][i] = currentChar;
+				if(currentChar == '@'){
+					this.agentPos = new Point(i,j);
+				}
 				pos += 1;
 			}
 		}
 		
-		outputGrid();
+		//outputGrid();
 	}
 	
-	private boolean checkForGoal(String goal){
+	public void copyGrid(PuzzleGrid grid){
+		char[][] gridTileList = grid.getTileList();
+		
+		for(int i=0; i<gridSize; i++){
+			for(int j=0; j<gridSize; j++){
+				tileList[j][i] = gridTileList[j][i];
+			}
+		}
+	}
+	
+	public boolean checkForGoal(String goal){
 		int pos = 0;
 		for(int i=0; i<gridSize; i++){
 			if(gridStatus.charAt(pos) != goal.charAt(pos)){
@@ -48,10 +83,10 @@ public class PuzzleGrid {
 		return true;
 	}
 	
-	private void outputGrid(){
+	public void outputGrid(){
 		for(int i=0; i<gridSize; i++){
 			for(int j=0; j<gridSize; j++){
-				System.out.print(tileList[i][j]+" ");
+				System.out.print(tileList[j][i]+" ");
 			}
 			
 			System.out.println();
