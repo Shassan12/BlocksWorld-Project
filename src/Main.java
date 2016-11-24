@@ -2,11 +2,12 @@
 public class Main {
 
 	public static void main(String[] args) {
-		int gridSize = 2;
+		int gridSize = 4;
 		PuzzleGrid grid = new PuzzleGrid(gridSize);
 		grid.initiateGrid();
-		BreadthFirstSearch bfs = new BreadthFirstSearch(gridSize);
-		int answer = bfs.startBreadthFirstSearch(grid);
+		SearchMethods bfs = new SearchMethods(gridSize);
+		//int answer = bfs.startBreadthFirstSearch(grid);
+		int answer = bfs.startDepthFirstSearch(grid);
 		System.out.println(answer);
 	}
 

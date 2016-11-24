@@ -1,13 +1,14 @@
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Scanner;
 
-public class BreadthFirstSearch {
+public class SearchMethods {
 	private int gridSize;
 	//private String goalState;
 	private PuzzleGrid goalGrid;
 	
-	public BreadthFirstSearch(int gridSize){
+	public SearchMethods(int gridSize){
 		this.gridSize = gridSize;
 		this.getGoalState();
 	}
@@ -31,7 +32,7 @@ public class BreadthFirstSearch {
 		goalGrid.setGrid(goalState);;
 	}
 	
-	public int startBreadthFirstSearch(PuzzleGrid rootNode){
+	public int startBreadthFirstSearch(PuzzleGrid rootNode){ //can be parallelized
 		int numOfNodesSearched = 0;
 		PuzzleGrid node = rootNode;
 		Queue<PuzzleGrid> frontier = new LinkedList<PuzzleGrid>();
@@ -60,6 +61,59 @@ public class BreadthFirstSearch {
 			
 			if(canMoveDown(node)){
 				frontier.add(moveDown(node));
+			}
+		}
+		
+		return numOfNodesSearched;
+	}
+	
+	public int startDepthFirstSearch(PuzzleGrid rootNode){
+		int numOfNodesSearched = 0;
+		PuzzleGrid node = rootNode;
+		Queue<PuzzleGrid> frontier = new LinkedList<PuzzleGrid>();
+		frontier.add(rootNode);
+		Random rand = new Random();
+		
+		while(!frontier.isEmpty()){
+			node = frontier.poll();
+			node.outputGrid();
+			numOfNodesSearched += 1;
+			boolean childMade = false;
+			
+			if(node.checkForGoal(goalGrid)){
+				return numOfNodesSearched;
+			}
+			
+			while(!childMade){
+				int choice = rand.nextInt(4);
+				
+				if(choice == 0){
+					if(canMoveRight(node)){
+						frontier.add(moveRight(node));
+						childMade = true;
+					}
+				}
+				
+				if(choice == 1){
+					if(canMoveLeft(node)){
+						frontier.add(moveLeft(node));
+						childMade = true;
+					}
+				}
+				
+				if(choice == 2){
+					if(canMoveUp(node)){
+						frontier.add(moveUp(node));
+						childMade = true;
+					}
+				}
+				
+				if(choice == 3){
+					if(canMoveDown(node)){
+						frontier.add(moveDown(node));
+						childMade = true;
+					}
+				}
 			}
 		}
 		
