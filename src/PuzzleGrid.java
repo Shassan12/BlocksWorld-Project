@@ -9,7 +9,6 @@ public class PuzzleGrid {
 	public PuzzleGrid(int gridSize){
 		this.gridSize = gridSize;
 		this.tileList = new char[gridSize][gridSize];
-		initiateGrid();
 	}
 	
 	public Point getAgentPos(){
@@ -21,6 +20,7 @@ public class PuzzleGrid {
 	}
 	
 	public void setAgentPos(int xPos, int yPos){
+		this.setTile('@', xPos, yPos);
 		agentPos = new Point(xPos, yPos);
 	}
 	
@@ -32,7 +32,7 @@ public class PuzzleGrid {
 		return tileList[xPos][yPos];
 	}
 	
-	private void initiateGrid(){
+	public void initiateGrid(){
 		Scanner scanner = new Scanner(System.in);
 		
 		while(true){
@@ -73,9 +73,9 @@ public class PuzzleGrid {
 	}
 	
 	public boolean checkForGoal(String goal){
-		int pos = 0;
-		for(int i=0; i<gridSize; i++){
-			if(gridStatus.charAt(pos) != goal.charAt(pos)){
+		for(int i=0; i<gridSize*gridSize; i++){
+			System.out.println(gridStatus);
+			if((gridStatus.charAt(i) != goal.charAt(i))&&(gridStatus.charAt(i)!='@')){
 				return false;
 			}
 		}
@@ -91,5 +91,7 @@ public class PuzzleGrid {
 			
 			System.out.println();
 		}
+		
+		System.out.println();
 	}
 }
