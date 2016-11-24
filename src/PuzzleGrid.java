@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class PuzzleGrid {
 	private int gridSize;
 	private char[][] tileList;
-	private String gridStatus;
+	//private String gridStatus;
 	private Point agentPos;
 	
 	public PuzzleGrid(int gridSize){
@@ -34,10 +34,11 @@ public class PuzzleGrid {
 	
 	public void initiateGrid(){
 		Scanner scanner = new Scanner(System.in);
+		String gridStatus = "";
 		
 		while(true){
 			System.out.println("Input grid config as a string (e.g. aaaa for grid size 2):");
-			this.gridStatus = scanner.next();
+			gridStatus = scanner.next();
 			
 			if(gridStatus.length() == gridSize*gridSize){
 				break;
@@ -45,8 +46,8 @@ public class PuzzleGrid {
 				System.out.println("invalid configuration. Configuration should have the same number of characters as the gridsize (" + gridSize+").");
 			}
 		}
-		
-		int pos = 0;
+		this.setGrid(gridStatus);
+		/*int pos = 0;
 		
 		for(int i=0; i<gridSize; i++){
 			for(int j=0; j<gridSize; j++){
@@ -57,9 +58,24 @@ public class PuzzleGrid {
 				}
 				pos += 1;
 			}
-		}
+		}*/
 		
 		//outputGrid();
+	}
+	
+	public void setGrid(String gridStatus){
+		int pos = 0;
+
+		for(int i=0; i<gridSize; i++){
+			for(int j=0; j<gridSize; j++){
+				char currentChar = gridStatus.charAt(pos);
+				tileList[j][i] = currentChar;
+				if(currentChar == '@'){
+					this.agentPos = new Point(i,j);
+				}
+				pos += 1;
+			}
+		}
 	}
 	
 	public void copyGrid(PuzzleGrid grid){
@@ -72,11 +88,23 @@ public class PuzzleGrid {
 		}
 	}
 	
-	public boolean checkForGoal(String goal){
-		for(int i=0; i<gridSize*gridSize; i++){
+	public boolean checkForGoal(PuzzleGrid goalGrid){
+		/*for(int i=0; i<gridSize*gridSize; i++){
 			System.out.println(gridStatus);
 			if((gridStatus.charAt(i) != goal.charAt(i))&&(gridStatus.charAt(i)!='@')){
 				return false;
+			}
+		}*/
+		char[][] goalGridList = goalGrid.getTileList();
+		char gridChar = ' ';
+		
+		for(int i=0; i<gridSize; i++){
+			for(int j=0; j<gridSize; j++){
+				gridChar = this.tileList[j][i];
+				if(gridChar == '@'){gridChar = '*';}
+				if(gridChar != goalGridList[j][i]){
+					return false;
+				}
 			}
 		}
 		

@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class BreadthFirstSearch {
 	private int gridSize;
-	private String goalState;
+	//private String goalState;
 	private PuzzleGrid goalGrid;
 	
 	public BreadthFirstSearch(int gridSize){
@@ -14,11 +14,11 @@ public class BreadthFirstSearch {
 	
 	private void getGoalState(){
 		Scanner scanner = new Scanner(System.in);
-		goalGrid = new PuzzleGrid(gridSize);
+		String goalState = "";
 		
 		while(true){
 			System.out.println("Input goal state config as a string (e.g. aaaa for grid size 2):");
-			this.goalState = scanner.next();
+			goalState = scanner.next();
 			
 			if(goalState.length() == gridSize*gridSize){
 				break;
@@ -27,7 +27,8 @@ public class BreadthFirstSearch {
 			}
 		}
 		
-		goalGrid.initiateGrid();
+		goalGrid = new PuzzleGrid(gridSize);
+		goalGrid.setGrid(goalState);;
 	}
 	
 	public int startBreadthFirstSearch(PuzzleGrid rootNode){
@@ -39,8 +40,9 @@ public class BreadthFirstSearch {
 		while(!frontier.isEmpty()){
 			node = frontier.poll();
 			node.outputGrid();
+			numOfNodesSearched += 1;
 			
-			if(node.checkForGoal(goalState)){
+			if(node.checkForGoal(goalGrid)){
 				return numOfNodesSearched;
 			}
 			

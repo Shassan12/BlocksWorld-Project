@@ -2,7 +2,7 @@
 public class Main {
 
 	public static void main(String[] args) {
-		int gridSize = 3;
+		int gridSize = 2;
 		PuzzleGrid grid = new PuzzleGrid(gridSize);
 		grid.initiateGrid();
 		BreadthFirstSearch bfs = new BreadthFirstSearch(gridSize);
