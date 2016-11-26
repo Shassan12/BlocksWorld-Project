@@ -124,7 +124,7 @@ public class SearchMethods {
 	}
 	
 	int nodesSearched = 0;
-	public int startDepthLimitedSearch(PuzzleGrid rootNode){
+	public int startIterativeDeepeningSearch(PuzzleGrid rootNode){
 		//int numOfNodesSearched = 0;
 		PuzzleGrid node = rootNode;
 		int limit = 1;
