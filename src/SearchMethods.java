@@ -123,6 +123,64 @@ public class SearchMethods {
 		return numOfNodesSearched;
 	}
 	
+	int nodesSearched = 0;
+	public int startDepthLimitedSearch(PuzzleGrid rootNode){
+		//int numOfNodesSearched = 0;
+		PuzzleGrid node = rootNode;
+		int limit = 1;
+		boolean found = false;
+		while(!found){	
+			found = depthLimitedSearch(node, limit);
+			limit++;
+		}
+		
+		return nodesSearched;
+	}
+	
+	public boolean depthLimitedSearch(PuzzleGrid node, int limit){
+		nodesSearched++;
+		node.outputGrid();
+		boolean result = false;
+
+		if(node.checkForGoal(goalGrid)){
+			return true;
+		}
+
+		if(limit <= 0){
+			return false;
+		}
+
+		if(canMoveRight(node)){
+			result = depthLimitedSearch(moveRight(node), limit - 1);
+			if(result){
+				return true;
+			}
+		}
+
+		if(canMoveLeft(node)){
+			result = depthLimitedSearch(moveLeft(node), limit - 1);
+			if(result){
+				return true;
+			}
+		}
+
+		if(canMoveUp(node)){
+			result = depthLimitedSearch(moveUp(node), limit - 1);
+			if(result){
+				return true;
+			}
+		}
+
+		if(canMoveDown(node)){
+			result = depthLimitedSearch(moveDown(node), limit - 1);
+			if(result){
+				return true;
+			}
+		}
+		return result;
+
+	}
+
 	public int startHeuristicASearch(PuzzleGrid rootNode){
 		int numOfNodesSearched = 0;
 		getGoalPositions(goalGrid);
