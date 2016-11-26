@@ -1,10 +1,13 @@
 import java.util.Scanner;
 
-public class PuzzleGrid {
+public class PuzzleGrid implements Comparable<PuzzleGrid>{
 	private int gridSize;
 	private char[][] tileList;
 	//private String gridStatus;
 	private Point agentPos;
+	private int distanceFromGoal;
+	private int distanceFromRoot;
+	private int evalValue;
 	
 	public PuzzleGrid(int gridSize){
 		this.gridSize = gridSize;
@@ -17,6 +20,30 @@ public class PuzzleGrid {
 	
 	public char[][] getTileList(){
 		return tileList;
+	}
+	
+	public int getDistanceFromGoal(){
+		return distanceFromGoal;
+	}
+	
+	public void setDistanceFromGoal(int distanceFromGoal){
+		this.distanceFromGoal = distanceFromGoal;
+	}
+	
+	public int getDistanceFromRoot(){
+		return distanceFromRoot;
+	}
+	
+	public void setDistanceFromRoot(int distanceFromRoot){
+		this.distanceFromRoot = distanceFromRoot;
+	}
+	
+	public int getEvalValue(){
+		return evalValue;
+	}
+	
+	public void setEvalValue(int evalValue){
+		this.evalValue = evalValue;
 	}
 	
 	public void setAgentPos(int xPos, int yPos){
@@ -121,5 +148,17 @@ public class PuzzleGrid {
 		}
 		
 		System.out.println();
+	}
+
+	public int compareTo(PuzzleGrid g2) {
+		if(this.getEvalValue() < g2.getEvalValue()){
+			return -1;
+		}
+		
+		if(this.getEvalValue() > g2.getEvalValue()){
+			return 1;
+		}
+		
+		return 0;
 	}
 }

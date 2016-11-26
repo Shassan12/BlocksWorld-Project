@@ -7,7 +7,8 @@ public class Main {
 		grid.initiateGrid();
 		SearchMethods bfs = new SearchMethods(gridSize);
 		//int answer = bfs.startBreadthFirstSearch(grid);
-		int answer = bfs.startDepthFirstSearch(grid);
+		//int answer = bfs.startDepthFirstSearch(grid);
+		int answer = bfs.startHeuristicASearch(grid);
 		System.out.println(answer);
 	}
 

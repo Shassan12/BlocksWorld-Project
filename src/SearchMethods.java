@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Scanner;
@@ -7,6 +9,7 @@ public class SearchMethods {
 	private int gridSize;
 	//private String goalState;
 	private PuzzleGrid goalGrid;
+	private ArrayList<Point> goalPositions;
 	
 	public SearchMethods(int gridSize){
 		this.gridSize = gridSize;
@@ -120,6 +123,55 @@ public class SearchMethods {
 		return numOfNodesSearched;
 	}
 	
+	public int startHeuristicASearch(PuzzleGrid rootNode){
+		int numOfNodesSearched = 0;
+		getGoalPositions(goalGrid);
+		PriorityQueue<PuzzleGrid> open = new PriorityQueue<PuzzleGrid>();
+		PuzzleGrid node = rootNode;
+		
+		calculateEvalFunc(rootNode, -1);
+		open.add(rootNode);
+		
+		while(!open.isEmpty()){
+			node = open.poll();
+			node.outputGrid();
+			numOfNodesSearched++;
+			//System.out.println(node.getDistanceFromRoot());
+			//System.out.println(node.getDistanceFromGoal());
+			//System.out.println(node.getEvalValue());
+			
+			if(node.checkForGoal(goalGrid)){
+				return numOfNodesSearched;
+			}
+			
+			if(canMoveRight(node)){
+				PuzzleGrid newRightNode = this.moveRight(node);
+				this.calculateEvalFunc(newRightNode, node.getDistanceFromRoot());
+				open.add(newRightNode);
+			}
+			
+			if(canMoveLeft(node)){
+				PuzzleGrid newLeftNode = this.moveLeft(node);
+				this.calculateEvalFunc(newLeftNode, node.getDistanceFromRoot());
+				open.add(newLeftNode);
+			}
+			
+			if(canMoveUp(node)){
+				PuzzleGrid newUpNode = this.moveUp(node);
+				this.calculateEvalFunc(newUpNode, node.getDistanceFromRoot());
+				open.add(newUpNode);
+			}
+			
+			if(canMoveDown(node)){
+				PuzzleGrid newDownNode = this.moveDown(node);
+				this.calculateEvalFunc(newDownNode, node.getDistanceFromRoot());
+				open.add(newDownNode);
+			}
+		}
+		
+		return numOfNodesSearched;
+	}
+	
 	public boolean canMoveRight(PuzzleGrid node){
 		Point agentPos = node.getAgentPos();
 		if((agentPos.getXPos() + 1) < gridSize){
@@ -205,4 +257,50 @@ public class SearchMethods {
 	}
 	
 	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private void getGoalPositions(PuzzleGrid grid){
+		char tileList[][] = grid.getTileList();
+		goalPositions = new ArrayList<Point>();
+		
+		for(int i=0; i<gridSize; i++){
+			for(int j=0; j<gridSize; j++){
+				if((tileList[j][i] != '@')&&(tileList[j][i] != '*')){
+					goalPositions.add(new Point(tileList[j][i],j,i));
+				}
+			}
+		}
+	}
+	
+	private int distanceFromGoal(PuzzleGrid grid){
+		char tileList[][] = grid.getTileList();
+		int distance = 0;
+		
+		for(int i=0; i<gridSize; i++){
+			for(int j=0; j<gridSize; j++){
+				if((tileList[j][i] != '@')&&(tileList[j][i] != '*')){
+					for(int k=0; k <goalPositions.size(); k++){
+						if(goalPositions.get(k).getSymobol() == tileList[j][i]){
+							Point goalPoint = goalPositions.get(k);
+							distance = distance + (Math.abs(goalPoint.getXPos() - j)+Math.abs(goalPoint.getYPos()+i));
+						}
+					}
+				}
+			}
+		}
+		
+		return distance;
+	}
+	
+	private void calculateEvalFunc(PuzzleGrid grid, int g){
+		int distanceFromRoot = g + 1;
+		int distanceFromGoal = distanceFromGoal(grid);
+		int evalValue = distanceFromRoot + distanceFromGoal;
+		
+		grid.setDistanceFromRoot(distanceFromRoot);
+		grid.setDistanceFromGoal(distanceFromGoal);
+		grid.setEvalValue(evalValue);
+	}
 }
+
+
