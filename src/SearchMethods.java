@@ -7,7 +7,6 @@ import java.util.Scanner;
 
 public class SearchMethods {
 	private int gridSize;
-	//private String goalState;
 	private PuzzleGrid goalGrid;
 	private ArrayList<Point> goalPositions;
 	
@@ -194,9 +193,9 @@ public class SearchMethods {
 			node = open.poll();
 			node.outputGrid();
 			numOfNodesSearched++;
-			//System.out.println(node.getDistanceFromRoot());
-			//System.out.println(node.getDistanceFromGoal());
-			//System.out.println(node.getEvalValue());
+			System.out.println(node.getDistanceFromRoot());
+			System.out.println(node.getDistanceFromGoal());
+			System.out.println(node.getEvalValue());
 			
 			if(node.checkForGoal(goalGrid)){
 				return numOfNodesSearched;
@@ -337,10 +336,10 @@ public class SearchMethods {
 		for(int i=0; i<gridSize; i++){
 			for(int j=0; j<gridSize; j++){
 				if((tileList[j][i] != '@')&&(tileList[j][i] != '*')){
-					for(int k=0; k <goalPositions.size(); k++){
-						if(goalPositions.get(k).getSymobol() == tileList[j][i]){
+					for(int k=0; k < goalPositions.size(); k++){
+						if(goalPositions.get(k).getSymbol() == tileList[j][i]){
 							Point goalPoint = goalPositions.get(k);
-							distance = distance + (Math.abs(goalPoint.getXPos() - j)+Math.abs(goalPoint.getYPos()+i));
+							distance = distance + (Math.abs(goalPoint.getXPos() - j) + Math.abs(goalPoint.getYPos() - i));
 						}
 					}
 				}

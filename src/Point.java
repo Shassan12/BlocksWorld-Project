@@ -23,7 +23,7 @@ public class Point{
 			return this.yPos;
 		}
 		
-		public char getSymobol(){
+		public char getSymbol(){
 			return this.symbol;
 		}
 	}

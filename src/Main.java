@@ -8,8 +8,8 @@ public class Main {
 		SearchMethods bfs = new SearchMethods(gridSize);
 		//int answer = bfs.startBreadthFirstSearch(grid);
 		//int answer = bfs.startDepthFirstSearch(grid);
-		//int answer = bfs.startHeuristicASearch(grid);
-		int answer = bfs.startIterativeDeepeningSearch(grid);
+		int answer = bfs.startHeuristicASearch(grid);
+		//int answer = bfs.startIterativeDeepeningSearch(grid);
 		System.out.println(answer);
 	}
 
