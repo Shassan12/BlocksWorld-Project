@@ -403,92 +403,158 @@ public class SearchMethods {
 		//get position of agent
 		Point agentPos = node.getAgentPos();
 		
-		
+		//check if the agent is next to the edge of the grid or that there is not an obstacle
 		if((agentPos.getXPos() + 1) < gridSize){
-			return true;
-		}else{
-			return false;
+			//get tile to the right of the agent
+			char tile = node.getTile(agentPos.getXPos() + 1, agentPos.getYPos());
+			if(tile != 'O'){
+				return true;
+			}
 		}
+		
+		return false;	
 	}
 	
+	/*creates a new node with a puzzlegrid that has the agent swap places
+	 * with the block to the right of it
+	 */
 	private PuzzleGrid moveRight(PuzzleGrid parentNode){
 		PuzzleGrid newNode = new PuzzleGrid(gridSize);
-		newNode.copyGrid(parentNode);
 		Point agentPos = parentNode.getAgentPos();
+		newNode.copyGrid(parentNode);
 		
+		//get the character on the tile to the right of the agent
 		char tile = newNode.getTile(agentPos.getXPos() + 1, agentPos.getYPos());
+		
+		//set the new agent position to the right of its orginal position
 		newNode.setAgentPos(agentPos.getXPos() + 1, agentPos.getYPos());
+		
+		//set the position of the swapped tile to the original position of the agent
 		newNode.setTile(tile, agentPos.getXPos(), agentPos.getYPos());
 		
+		//return the new node
 		return newNode;
 	}
 	
+	//check if agent can move left
 	public boolean canMoveLeft(PuzzleGrid node){
+		//get position of agent
 		Point agentPos = node.getAgentPos();
+		
+		//check if the agent is next to the edge of the grid
 		if((agentPos.getXPos() - 1) >= 0){
-			return true;
-		}else{
-			return false;
+			//get tile to the right of the agent
+			char tile = node.getTile(agentPos.getXPos() - 1, agentPos.getYPos());
+			if(tile != 'O'){
+				return true;
+			}
 		}
+		
+		return false;
 	}
 	
+	/*creates a new node with a puzzlegrid that has the agent swap places
+	 * with the block to the left of it
+	 */
 	private PuzzleGrid moveLeft(PuzzleGrid parentNode){
 		PuzzleGrid newNode = new PuzzleGrid(gridSize);
 		newNode.copyGrid(parentNode);
 		Point agentPos = parentNode.getAgentPos();
 		
+		//get the character on the tile to the left of the agent
 		char tile = newNode.getTile(agentPos.getXPos() - 1, agentPos.getYPos());
+		
+		//set the new agent position to the left of its original position
 		newNode.setAgentPos(agentPos.getXPos() - 1, agentPos.getYPos());
+		
+		//set the position of the swapped tile to the original position of the agent
 		newNode.setTile(tile, agentPos.getXPos(), agentPos.getYPos());
 		
+		//return the new node
 		return newNode;
 	}
 	
+	//check if agent can move up
 	public boolean canMoveUp(PuzzleGrid node){
+		//get position of agent
 		Point agentPos = node.getAgentPos();
+		
+		//check if the agent is next to the edge of the grid
 		if((agentPos.getYPos() - 1) >= 0){
-			return true;
-		}else{
-			return false;
+			//get tile to the right of the agent
+			char tile = node.getTile(agentPos.getXPos(), agentPos.getYPos() - 1);
+			if(tile != 'O'){
+				return true;
+			}
 		}
+		
+		return false;
 	}
 	
+	/*creates a new node with a puzzlegrid that has the agent swap places
+	 * with the block to the right of it
+	 */
 	private PuzzleGrid moveUp(PuzzleGrid parentNode){
 		PuzzleGrid newNode = new PuzzleGrid(gridSize);
 		newNode.copyGrid(parentNode);
 		Point agentPos = parentNode.getAgentPos();
 		
+		//get the character on the tile above the agent
 		char tile = newNode.getTile(agentPos.getXPos(), agentPos.getYPos() - 1);
+		
+		//set the new agent position above of its original position
 		newNode.setAgentPos(agentPos.getXPos(), agentPos.getYPos() - 1);
+		
+		//set the position of the swapped tile to the original position of the agent
 		newNode.setTile(tile, agentPos.getXPos(), agentPos.getYPos());
 		
+		//return the new node
 		return newNode;
 	}
 	
+	//check if agent can move down
 	public boolean canMoveDown(PuzzleGrid node){
+		
+		//get position of agent
 		Point agentPos = node.getAgentPos();
+		
+		//check if the agent is next to the edge of the grid
 		if((agentPos.getYPos() + 1) < gridSize){
-			return true;
-		}else{
-			return false;
+			//get tile to the right of the agent
+			char tile = node.getTile(agentPos.getXPos(), agentPos.getYPos() + 1);
+			if(tile != 'O'){
+				return true;
+			}
 		}
+		
+		return false;
 	}
 	
+	/*creates a new node with a puzzlegrid that has the agent swap places
+	 * with the block below it
+	 */
 	private PuzzleGrid moveDown(PuzzleGrid parentNode){
 		PuzzleGrid newNode = new PuzzleGrid(gridSize);
 		newNode.copyGrid(parentNode);
 		Point agentPos = parentNode.getAgentPos();
 		
+		//get the character on the tile below the agent
 		char tile = newNode.getTile(agentPos.getXPos(), agentPos.getYPos() + 1);
+		
+		//set the new agent position below its original position
 		newNode.setAgentPos(agentPos.getXPos(), agentPos.getYPos() + 1);
+		
+		//set the position of the swapped tile to the original position of the agent
 		newNode.setTile(tile, agentPos.getXPos(), agentPos.getYPos());
 		
+		//return the new node
 		return newNode;
 	}
 	
 	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////Heuristic A* Search methods//////////////////////////
 	
+	//gets the position of all non blank/agent tiles in goal grid
 	private void getGoalPositions(PuzzleGrid grid){
 		char tileList[][] = grid.getTileList();
 		goalPositions = new ArrayList<Point>();
@@ -502,6 +568,7 @@ public class SearchMethods {
 		}
 	}
 	
+	//calculates the manhatten distance for the node (The combined distance of each non blank tile from its goal position)
 	private int distanceFromGoal(PuzzleGrid grid){
 		char tileList[][] = grid.getTileList();
 		int distance = 0;
@@ -522,11 +589,18 @@ public class SearchMethods {
 		return distance;
 	}
 	
+	//calculates the evaluation function for this node
 	private void calculateEvalFunc(PuzzleGrid grid, int g){
+		//distance from root is one move more than the parent node
 		int distanceFromRoot = g + 1;
+		
+		//distance from the goal is the manhatten distance (Heuristic)
 		int distanceFromGoal = distanceFromGoal(grid);
+		
+		//calculate evaluation function using the sum of the distance from goal and heuristic
 		int evalValue = distanceFromRoot + distanceFromGoal;
 		
+		//set evaluation function values in node
 		grid.setDistanceFromRoot(distanceFromRoot);
 		grid.setDistanceFromGoal(distanceFromGoal);
 		grid.setEvalValue(evalValue);
