@@ -8,6 +8,7 @@ public class Main {
 		SearchMethods bfs = new SearchMethods(gridSize);
 		int choice;
 		
+		//loop and ask user to commands until program is terminated by user input
 		while(true){
 			int answer = 0;
 			System.out.println("Enter 1 for bfs, 2 for dfs, 3 for A*, 4 for IDS and 5 to exit");

@@ -1,6 +1,8 @@
 import java.util.Scanner;
 
 public class Choice{
+	
+	//reads user choice for which search method to use
 	public int getChoice(){
 		Scanner scanner = new Scanner(System.in);
 		int choice = 0;
@@ -19,6 +21,7 @@ public class Choice{
 		return choice;
 	}
 	
+	//reads user input to set the size of the grid used for each node
 	public int getSize(){
 		Scanner scanner = new Scanner(System.in);
 		int size = 0;
