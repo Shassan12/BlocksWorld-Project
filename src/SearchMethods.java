@@ -9,9 +9,11 @@ public class SearchMethods {
 	private int gridSize;
 	private PuzzleGrid goalGrid;
 	private ArrayList<Point> goalPositions;
+	private FileWriter fileWriter;
 	
 	public SearchMethods(int gridSize){
 		this.gridSize = gridSize;
+		this.fileWriter = new FileWriter(gridSize);
 		this.getGoalState();
 	}
 	
@@ -20,7 +22,7 @@ public class SearchMethods {
 		String goalState = "";
 		
 		while(true){
-			System.out.println("Input goal state config as a string (e.g. aaaa for grid size 2):");
+			System.out.println("Input goal state config as a string (e.g. **A@ for grid size 2):");
 			goalState = scanner.next();
 			
 			if(goalState.length() == gridSize*gridSize){
@@ -34,18 +36,22 @@ public class SearchMethods {
 		goalGrid.setGrid(goalState);;
 	}
 	
-	public int startBreadthFirstSearch(PuzzleGrid rootNode){ //can be parallelized
+	public int startBreadthFirstSearch(PuzzleGrid rootNode){
 		int numOfNodesSearched = 0;
+		String fileName = "bfsResults.txt";
 		PuzzleGrid node = rootNode;
 		Queue<PuzzleGrid> frontier = new LinkedList<PuzzleGrid>();
 		frontier.add(rootNode);
+		fileWriter.deleteFile(fileName);
 		
 		while(!frontier.isEmpty()){
 			node = frontier.poll();
 			node.outputGrid();
+			fileWriter.saveNodeToFile(fileName, node);
 			numOfNodesSearched += 1;
 			
 			if(node.checkForGoal(goalGrid)){
+				fileWriter.saveNodesExpanded(fileName, numOfNodesSearched, frontier.size());
 				return numOfNodesSearched;
 			}
 			
@@ -71,18 +77,23 @@ public class SearchMethods {
 	
 	public int startDepthFirstSearch(PuzzleGrid rootNode){
 		int numOfNodesSearched = 0;
+		String fileName = "dfsResults.txt";
+		Random rand = new Random();
+		fileWriter.deleteFile(fileName);
 		PuzzleGrid node = rootNode;
 		Queue<PuzzleGrid> frontier = new LinkedList<PuzzleGrid>();
 		frontier.add(rootNode);
-		Random rand = new Random();
 		
 		while(!frontier.isEmpty()){
 			node = frontier.poll();
 			node.outputGrid();
+			System.out.println(frontier.size());
 			numOfNodesSearched += 1;
+			fileWriter.saveNodeToFile(fileName, node);
 			boolean childMade = false;
 			
 			if(node.checkForGoal(goalGrid)){
+				fileWriter.saveNodesExpanded(fileName, numOfNodesSearched, numOfNodesSearched);
 				return numOfNodesSearched;
 			}
 			
@@ -121,27 +132,33 @@ public class SearchMethods {
 		
 		return numOfNodesSearched;
 	}
-	
+	int nodesStored = 0;
 	int nodesSearched = 0;
 	public int startIterativeDeepeningSearch(PuzzleGrid rootNode){
-		//int numOfNodesSearched = 0;
 		PuzzleGrid node = rootNode;
+		String fileName = "IDSResults.txt";
+		fileWriter.deleteFile(fileName);
 		int limit = 1;
 		boolean found = false;
 		while(!found){	
 			found = depthLimitedSearch(node, limit);
 			limit++;
+			nodesStored = 0;
 		}
 		
 		return nodesSearched;
 	}
 	
 	public boolean depthLimitedSearch(PuzzleGrid node, int limit){
+		String fileName = "IDSResults.txt";
 		nodesSearched++;
 		node.outputGrid();
+		fileWriter.saveNodeToFile(fileName, node);
+		System.out.println(limit);
 		boolean result = false;
-
+		nodesStored = nodesStored + 1;
 		if(node.checkForGoal(goalGrid)){
+			fileWriter.saveNodesExpanded(fileName, nodesSearched,nodesStored);
 			return true;
 		}
 
@@ -182,47 +199,53 @@ public class SearchMethods {
 
 	public int startHeuristicASearch(PuzzleGrid rootNode){
 		int numOfNodesSearched = 0;
+		String fileName = "AResults.txt";
+		fileWriter.deleteFile(fileName);
 		getGoalPositions(goalGrid);
-		PriorityQueue<PuzzleGrid> open = new PriorityQueue<PuzzleGrid>();
-		PuzzleGrid node = rootNode;
-		
+		PriorityQueue<PuzzleGrid> frontier = new PriorityQueue<PuzzleGrid>();
+		PuzzleGrid node = rootNode;	
 		calculateEvalFunc(rootNode, -1);
-		open.add(rootNode);
+		frontier.add(rootNode);
 		
-		while(!open.isEmpty()){
-			node = open.poll();
+		while(!frontier.isEmpty()){
+			node = frontier.poll();
 			node.outputGrid();
+			int g = node.getDistanceFromRoot();
+			int h = node.getDistanceFromGoal();
+			int f = node.getEvalValue();
+			fileWriter.saveAStarNodeToFile(fileName, node, f, g, h);
 			numOfNodesSearched++;
-			System.out.println(node.getDistanceFromRoot());
-			System.out.println(node.getDistanceFromGoal());
-			System.out.println(node.getEvalValue());
-			
+			System.out.println("Distance Travelled: " + g);
+			System.out.println("Distance from goal: " + h);
+			System.out.println("Evaluation Value: " + f);
+			System.out.println();
 			if(node.checkForGoal(goalGrid)){
+				fileWriter.saveNodesExpanded(fileName, numOfNodesSearched, frontier.size());
 				return numOfNodesSearched;
 			}
 			
 			if(canMoveRight(node)){
 				PuzzleGrid newRightNode = this.moveRight(node);
 				this.calculateEvalFunc(newRightNode, node.getDistanceFromRoot());
-				open.add(newRightNode);
+				frontier.add(newRightNode);
 			}
 			
 			if(canMoveLeft(node)){
 				PuzzleGrid newLeftNode = this.moveLeft(node);
 				this.calculateEvalFunc(newLeftNode, node.getDistanceFromRoot());
-				open.add(newLeftNode);
+				frontier.add(newLeftNode);
 			}
 			
 			if(canMoveUp(node)){
 				PuzzleGrid newUpNode = this.moveUp(node);
 				this.calculateEvalFunc(newUpNode, node.getDistanceFromRoot());
-				open.add(newUpNode);
+				frontier.add(newUpNode);
 			}
 			
 			if(canMoveDown(node)){
 				PuzzleGrid newDownNode = this.moveDown(node);
 				this.calculateEvalFunc(newDownNode, node.getDistanceFromRoot());
-				open.add(newDownNode);
+				frontier.add(newDownNode);
 			}
 		}
 		

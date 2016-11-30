@@ -1,0 +1,41 @@
+* * 
+A @ 
+
+* * 
+@ A 
+
+* @ 
+A * 
+
+* * 
+A @ 
+
+@ * 
+* A 
+
+@ * 
+A * 
+
+* * 
+A @ 
+
+* * 
+@ A 
+
+* @ 
+A * 
+
+* @ 
+* A 
+
+* * 
+@ A 
+
+* @ 
+A * 
+
+A * 
+@ * 
+
+Number of Nodes Expanded: 13
+Number of Nodes stored: 12

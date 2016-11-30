@@ -3,7 +3,6 @@ import java.util.Scanner;
 public class PuzzleGrid implements Comparable<PuzzleGrid>{
 	private int gridSize;
 	private char[][] tileList;
-	//private String gridStatus;
 	private Point agentPos;
 	private int distanceFromGoal;
 	private int distanceFromRoot;
@@ -64,7 +63,7 @@ public class PuzzleGrid implements Comparable<PuzzleGrid>{
 		String gridStatus = "";
 		
 		while(true){
-			System.out.println("Input grid config as a string (e.g. aaaa for grid size 2):");
+			System.out.println("Input grid config as a string (e.g. **A@ for grid size 2):");
 			gridStatus = scanner.next();
 			
 			if(gridStatus.length() == gridSize*gridSize){
@@ -74,20 +73,6 @@ public class PuzzleGrid implements Comparable<PuzzleGrid>{
 			}
 		}
 		this.setGrid(gridStatus);
-		/*int pos = 0;
-		
-		for(int i=0; i<gridSize; i++){
-			for(int j=0; j<gridSize; j++){
-				char currentChar = gridStatus.charAt(pos);
-				tileList[j][i] = currentChar;
-				if(currentChar == '@'){
-					this.agentPos = new Point(i,j);
-				}
-				pos += 1;
-			}
-		}*/
-		
-		//outputGrid();
 	}
 	
 	public void setGrid(String gridStatus){
@@ -116,12 +101,6 @@ public class PuzzleGrid implements Comparable<PuzzleGrid>{
 	}
 	
 	public boolean checkForGoal(PuzzleGrid goalGrid){
-		/*for(int i=0; i<gridSize*gridSize; i++){
-			System.out.println(gridStatus);
-			if((gridStatus.charAt(i) != goal.charAt(i))&&(gridStatus.charAt(i)!='@')){
-				return false;
-			}
-		}*/
 		char[][] goalGridList = goalGrid.getTileList();
 		char gridChar = ' ';
 		
